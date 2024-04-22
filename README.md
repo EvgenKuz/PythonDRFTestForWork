@@ -2,6 +2,20 @@
 Python DRF test task for job apllication.
 Requirements from [repo](https://github.com/sdobrimutrom/python_test).
 
+# Installation and start
+1. Install [Python 3.11](https://www.python.org/)
+2. Install [Poetry](https://python-poetry.org/docs/#installation)
+3. Install [Docker](https://docs.docker.com/get-docker/)
+
+## Just start the project
+4. Run `docker compose up -d`
+5. Server is now available at `localhost:8080\swagger`
+
+## Development
+4. Run `docker compose up -d redis`
+5. Run `poetry install --with development`
+6. Now you can develop)
+
 # python_test
 MMVS Python Test
 
