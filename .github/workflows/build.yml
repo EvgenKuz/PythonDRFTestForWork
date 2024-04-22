@@ -1,0 +1,42 @@
+name: CI build
+on:
+  workflow_call:
+  push:
+    branches:
+      - '*'
+      - '*/*'
+      - '**'
+      - '!main'
+      - '!dev'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: getong/redis-action@v1
+        with:
+          redis version: alpine
+          redis password: 'redis'
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+      - name: Create env file
+        run: |
+          touch .env
+          echo REDIS_PASSWORD="redis@127.0.0.1:6379/" >> .env
+          echo REDIS_HOST_AND_PORT="127.0.0.1:6379" >> .env
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+      - name: Install libs
+        run: poetry install --with development
+      - name: flake8
+        run: poetry run flake8
+      - name: black
+        run: poetry run black . --check
+      - name: isort
+        run: poetry run isort . --check --diff
+      - name: Run tests
+        run: poetry run pytest
+      - name: Check absent migrations
+        run: poetry run python manage.py makemigrations --check --dry-run
