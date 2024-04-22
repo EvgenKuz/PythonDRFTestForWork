@@ -1,0 +1,36 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file: .env
+    volumes:
+      - ./db.sqlite3:/drf-ffmpeg/db.sqlite3
+      - ./static/:/drf-ffmpeg/static/
+    environment:
+      - REDIS_HOST_AND_PORT=redis:6379
+      - REDIS_PASSWORD
+      - SECRET_KEY
+      - DEBUG
+    depends_on:
+      - redis
+
+  redis:
+    image: eqalpha/keydb
+    ports:
+      - 6379:6379
+    env_file: .env
+    environment:
+      - REDIS_PASSWORD
+    restart: unless-stopped
+    command: keydb-server /etc/keydb/keydb.conf --server-threads 2 --requirepass ${REDIS_PASSWORD}
+
+  nginx:
+    image: nginx:mainline-alpine
+    ports:
+      - 8080:80
+    volumes:
+      - ./static/:/drf-ffmpeg/static
+      - ./deploy/config/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - api
