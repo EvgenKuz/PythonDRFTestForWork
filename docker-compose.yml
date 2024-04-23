@@ -7,6 +7,7 @@ services:
     volumes:
       - ./db.sqlite3:/drf-ffmpeg/db.sqlite3
       - ./static/:/drf-ffmpeg/static/
+      - ./media/:/drf-ffmpeg/media/
     environment:
       - REDIS_HOST_AND_PORT=redis:6379
       - REDIS_PASSWORD
