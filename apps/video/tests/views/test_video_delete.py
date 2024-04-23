@@ -11,7 +11,7 @@ from rest_framework.test import APIClient
 VIDEO_FILES_LOCATION = "media/videos/"
 
 
-class VideoUploadTests(TestCase):
+class VideoDeleteTests(TestCase):
 
     def setUp(self):
         self.client = APIClient()
@@ -31,16 +31,16 @@ class VideoUploadTests(TestCase):
         )
 
         video_id = response.data["id"]
-        assert os.path.isfile(VIDEO_FILES_LOCATION + video_id + ".mp4")
+        self.assertTrue(os.path.isfile(VIDEO_FILES_LOCATION + video_id + ".mp4"))
 
         response = self.client.delete(
             reverse(self.delete_reverse_name, kwargs=dict(id=video_id))
         )
 
-        assert not os.path.isfile(VIDEO_FILES_LOCATION + video_id + ".mp4")
-        assert response.status_code == status.HTTP_200_OK
-        assert "success" in response.data
-        assert response.data["success"]
+        self.assertFalse(os.path.isfile(VIDEO_FILES_LOCATION + video_id + ".mp4"))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("success", response.data)
+        self.assertTrue(response.data["success"])
 
     def test_incorrect_id(self):
         incorrect_id = uuid.uuid4()
@@ -48,8 +48,8 @@ class VideoUploadTests(TestCase):
             reverse(self.delete_reverse_name, kwargs=dict(id=incorrect_id))
         )
 
-        assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert "error" in response.data
-        assert response.data["error"] == "Incorrect id sent."
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("error", response.data)
+        self.assertEqual(response.data["error"], "Incorrect id sent.")
 
     # There's should be a test for deletion failure, but I can't think of one
