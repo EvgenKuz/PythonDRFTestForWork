@@ -19,11 +19,12 @@ REDIS_PASSWORD=securePassword
 6. Server is now available at `localhost:8080\swagger`
 
 ## Development
-5. Run `docker compose up -d redis`
-6. Run `poetry install --with development`
-7. Run `pre-commit install`
-8. Run `poetry run python manage.py migrate`
-9. Now you can develop)
+5. Install [Git LFS](https://git-lfs.com/)
+6. Run `docker compose up -d redis`
+7. Run `poetry install --with development`
+8. Run `pre-commit install`
+9. Run `poetry run python manage.py migrate`
+10. Now you can develop)
 
 # python_test
 MMVS Python Test

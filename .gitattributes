@@ -1,0 +1,2 @@
+test_binary_files/SampleVideo_1280x720_1mb.mp4 filter=lfs diff=lfs merge=lfs -text
+test_binary_files/SampleAudio_0.4mb.mp3 filter=lfs diff=lfs merge=lfs -text

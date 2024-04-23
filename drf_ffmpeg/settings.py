@@ -30,6 +30,8 @@ ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 # Application definition
 
+LOCAL_APPS = ["apps.video.apps.VideoConfig"]
+
 THIRD_PARTY_APPS = [
     "rest_framework",
     "drf_yasg",
@@ -43,6 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     *THIRD_PARTY_APPS,
+    *LOCAL_APPS,
 ]
 
 MIDDLEWARE = [
@@ -121,7 +124,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = "ru-ru"
+LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "Asia/Yekaterinburg"
 
