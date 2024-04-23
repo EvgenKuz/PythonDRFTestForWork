@@ -14,7 +14,7 @@ from apps.video.serializers import UploadVideo, VideoIdSerializer
 logger = logging.getLogger(__name__)
 
 
-class VideoUpload(views.APIView):
+class VideoUploadAPIView(views.APIView):
     parser_classes = (MultiPartParser,)
     serializer_class = UploadVideo
 
@@ -47,3 +47,46 @@ class VideoUpload(views.APIView):
         return Response(
             status=status.HTTP_200_OK, data=VideoIdSerializer(instance=video).data
         )
+
+
+class VideoAPIView(views.APIView):
+    @swagger_auto_schema(
+        operation_description="Delete video file",
+        manual_parameters=[
+            openapi.Parameter(
+                name="id",
+                description="Video's id",
+                type=openapi.TYPE_STRING,
+                in_=openapi.IN_PATH,
+                format=openapi.FORMAT_UUID,
+            )
+        ],
+        responses={
+            200: openapi.Response(
+                description="Video deletion attempted",
+                schema=openapi.Schema(
+                    title="Was video deleted?",
+                    type=openapi.TYPE_OBJECT,
+                    properties={"success": openapi.Schema(type=openapi.TYPE_BOOLEAN)},
+                ),
+            ),
+            400: "Incorrect id sent",
+        },
+    )
+    def delete(self, request: views.Request, id: uuid.UUID):
+        try:
+            video = Video.objects.get(id=id)
+        except Video.DoesNotExist:
+            logging.warning("Incorrect id sent.")
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST, data={"error": "Incorrect id sent."}
+            )
+
+        try:
+            video.video.delete()
+            video.delete()
+        except Exception as e:
+            logger.error("Failed to delete video with id: " + str(id), exc_info=e)
+            return Response(status=status.HTTP_200_OK, data={"success": False})
+
+        return Response(status=status.HTTP_200_OK, data={"success": True})
