@@ -29,19 +29,19 @@ class VideoUploadTests(TestCase):
             content_type=MULTIPART_CONTENT,
         )
 
-        assert response.status_code == status.HTTP_200_OK
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         video_id = response.data["id"]
         video_in_db = Video.objects.get(id=video_id)
 
-        assert video_in_db.name == self.video.name
-        assert video_id in video_in_db.video.path
+        self.assertEqual(video_in_db.name, self.video.name)
+        self.assertIn(video_id, video_in_db.video.path)
 
     def test_sending_no_file(self):
         response = self.client.post(self.upload_url, content_type=MULTIPART_CONTENT)
 
-        assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert "error" in response.data
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("error", response.data)
 
     def test_sending_incorrect_file(self):
         response = self.client.post(
@@ -50,6 +50,6 @@ class VideoUploadTests(TestCase):
             content_type=MULTIPART_CONTENT,
         )
 
-        assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert "error" in response.data
-        assert response.data["error"] == "Video has to be in mp4 format"
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("error", response.data)
+        self.assertEqual(response.data["error"], "Video has to be in mp4 format")
