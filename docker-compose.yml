@@ -1,8 +1,6 @@
 services:
   api:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     env_file: .env
     volumes:
       - ./db.sqlite3:/drf-ffmpeg/db.sqlite3
@@ -10,9 +8,6 @@ services:
       - ./media/:/drf-ffmpeg/media/
     environment:
       - REDIS_HOST_AND_PORT=redis:6379
-      - REDIS_PASSWORD
-      - SECRET_KEY
-      - DEBUG
     depends_on:
       - redis
 
@@ -21,8 +16,6 @@ services:
     ports:
       - 6379:6379
     env_file: .env
-    environment:
-      - REDIS_PASSWORD
     restart: unless-stopped
     command: keydb-server /etc/keydb/keydb.conf --server-threads 2 --requirepass ${REDIS_PASSWORD}
 
@@ -35,3 +28,31 @@ services:
       - ./deploy/config/nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - api
+
+  celery:
+    build: .
+    command: poetry run celery -A drf_ffmpeg worker -l info
+    env_file: .env
+    volumes:
+      - ./db.sqlite3:/drf-ffmpeg/db.sqlite3
+      - ./static/:/drf-ffmpeg/static/
+      - ./media/:/drf-ffmpeg/media/
+    environment:
+      - REDIS_HOST_AND_PORT=redis:6379
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  flower:
+    image: mher/flower
+    env_file: .env
+    environment:
+      - CELERY_BROKER_URL=redis://default:${REDIS_PASSWORD}@redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://default:${REDIS_PASSWORD}@redis:6379/0
+      - FLOWER_PORT=5555
+      - FLOWER_BASIC_AUTH=${FLOWER_LOGIN}:${FLOWER_PASSWORD}
+    depends_on:
+      - celery
+      - redis
+    ports:
+      - 5555:5555
