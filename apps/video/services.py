@@ -51,4 +51,4 @@ class ErrorMessageService:
             for error_message in list_of_errors:
                 errors.append(f"{field}: {error_message}")
 
-        return "\n".join(errors)
+        return " \n ".join(errors)
