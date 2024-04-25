@@ -29,7 +29,7 @@ class VideoUploadTests(TestCase):
 
     def tearDown(self):
         for video in self.uploaded_videos:
-            os.remove(VIDEO_FILES_LOCATION + video + ".mp4")
+            os.remove(VIDEO_FILES_LOCATION / f"{video}.mp4")
 
     def test_file_upload(self):
         response = self.client.post(

@@ -2,6 +2,7 @@ import os
 import uuid
 from unittest.mock import Mock, patch
 
+from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart
@@ -9,7 +10,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-VIDEO_FILES_LOCATION = "media/videos/"
+VIDEO_FILES_LOCATION = settings.MEDIA_ROOT / "videos"
 
 
 class VideoDeleteTests(TestCase):
@@ -32,13 +33,13 @@ class VideoDeleteTests(TestCase):
         )
 
         video_id = response.data["id"]
-        self.assertTrue(os.path.isfile(VIDEO_FILES_LOCATION + video_id + ".mp4"))
+        self.assertTrue(os.path.isfile(VIDEO_FILES_LOCATION / f"{video_id}.mp4"))
 
         response = self.client.delete(
             reverse(self.delete_reverse_name, kwargs=dict(id=video_id))
         )
 
-        self.assertFalse(os.path.isfile(VIDEO_FILES_LOCATION + video_id + ".mp4"))
+        self.assertFalse(os.path.isfile(VIDEO_FILES_LOCATION / f"{video_id}.mp4"))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn("success", response.data)
         self.assertTrue(response.data["success"])
@@ -69,5 +70,7 @@ class VideoDeleteTests(TestCase):
             reverse(self.delete_reverse_name, kwargs=dict(id=video_id))
         )
 
-        self.assertTrue(os.path.isfile(VIDEO_FILES_LOCATION + video_id + ".mp4"))
+        self.assertTrue(os.path.isfile(VIDEO_FILES_LOCATION / f"{video_id}.mp4"))
         self.assertFalse(response.data["success"])
+
+        os.remove(VIDEO_FILES_LOCATION / f"{video_id}.mp4")
