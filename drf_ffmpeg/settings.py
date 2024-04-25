@@ -91,12 +91,16 @@ DATABASES = {
 
 # Cache
 
+REDIS_URL = (
+    f"redis://default:"
+    f"{env('REDIS_PASSWORD', default='securePassword')}@"
+    f"{env('REDIS_HOST_AND_PORT', default='127.0.0.1:6379')}/"
+)
+
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": f"redis://default:"
-        f"{env('REDIS_PASSWORD', default='securePassword')}@"
-        f"{env('REDIS_HOST_AND_PORT', default='127.0.0.1:6379')}/",
+        "LOCATION": REDIS_URL,
     }
 }
 
@@ -168,3 +172,10 @@ LOGGING = {
     },
     "loggers": {"": {"level": "DEBUG", "handlers": ["console", "file"]}},
 }
+
+# Celery settings
+CELERY_TIMEZONE = "Asia/Yekaterinburg"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_BROKER_URL = REDIS_URL + "0"
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL

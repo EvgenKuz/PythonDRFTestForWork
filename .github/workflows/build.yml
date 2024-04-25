@@ -18,6 +18,8 @@ jobs:
         with:
           redis version: alpine
           redis password: 'redis'
+          lfs: 'true'
+      - run: git lfs pull
       - uses: actions/setup-python@v4
         with:
           python-version: 3.11
@@ -36,6 +38,8 @@ jobs:
         run: poetry run black . --check
       - name: isort
         run: poetry run isort . --check --diff
+      - name: Install FFMPEG
+        run: sudo apt update && sudo apt install ffmpeg
       - name: Run tests
         run: poetry run pytest
       - name: Check absent migrations

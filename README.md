@@ -6,25 +6,30 @@ Requirements from [repo](https://github.com/sdobrimutrom/python_test).
 1. Install [Python 3.11](https://www.python.org/)
 2. Install [Poetry](https://python-poetry.org/docs/#installation)
 3. Install [Docker](https://docs.docker.com/get-docker/)
-4. Create `.env`:
+4. Install [FFMPEG](https://ffmpeg.org/)
+5. Create `.env`:
 ```dotenv
 SECRET_KEY='django-insecure-@v7o6)tdhhe4-r)#vv#hsh$+4ui8$5!59bv)7c_av5rdu0xi$k'
 DEBUG=False
 
 REDIS_PASSWORD=securePassword
+
+FLOWER_LOGIN=admin
+FLOWER_PASSWORD=passwordFlower
 ```
 
 ## Just start the project
-5. Run `docker compose up -d`
-6. Server is now available at `localhost:8080\swagger`
+6. Run `docker compose up -d`
+7. Server is now available at `localhost:8080\swagger`
 
 ## Development
-5. Install [Git LFS](https://git-lfs.com/)
-6. Run `docker compose up -d redis`
-7. Run `poetry install --with development`
-8. Run `pre-commit install`
-9. Run `poetry run python manage.py migrate`
-10. Now you can develop)
+6. Install [Git LFS](https://git-lfs.com/)
+7. Run `git lfs pull`
+8. Run `docker compose up -d redis celery flower`
+9. Run `poetry install --with development`
+10. Run `pre-commit install`
+11. Run `poetry run python manage.py migrate`
+12. Now you can develop)
 
 # python_test
 MMVS Python Test
