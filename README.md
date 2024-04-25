@@ -25,7 +25,7 @@ FLOWER_PASSWORD=passwordFlower
 ## Development
 6. Install [Git LFS](https://git-lfs.com/)
 7. Run `git lfs pull`
-8. Run `docker compose up -d redis`
+8. Run `docker compose up -d redis celery flower`
 9. Run `poetry install --with development`
 10. Run `pre-commit install`
 11. Run `poetry run python manage.py migrate`
