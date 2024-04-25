@@ -18,6 +18,8 @@ jobs:
         with:
           redis version: alpine
           redis password: 'redis'
+          lfs: 'true'
+      - run: git lfs pull
       - uses: actions/setup-python@v4
         with:
           python-version: 3.11
