@@ -26,6 +26,7 @@ class VideoIdSerializer(serializers.ModelSerializer):
     class Meta:
         model = Video
         fields = ["id"]
+        read_only_fields = ["id"]
 
 
 STARTING_WIDTH_AND_HEIGHT = 22
@@ -56,9 +57,11 @@ class VideoResolution(serializers.Serializer):
 
 
 class VideoStatusSerializer(serializers.ModelSerializer):
-    filename = serializers.ReadOnlyField(source="name")
-    processing = serializers.ReadOnlyField(source="is_processing")
-    processingSuccess = serializers.ReadOnlyField(source="last_processed_success")
+    filename = serializers.CharField(source="name", read_only=True)
+    processing = serializers.BooleanField(source="is_processing", read_only=True)
+    processingSuccess = serializers.BooleanField(
+        source="last_processed_success", read_only=True, allow_null=True
+    )
 
     class Meta:
         model = Video
