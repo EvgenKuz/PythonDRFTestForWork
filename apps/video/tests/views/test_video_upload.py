@@ -63,3 +63,26 @@ class VideoUploadTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("error", response.data)
         self.assertEqual(response.data["error"], "video: Video has to be in mp4 format")
+
+    def test_sending_incorrect_mime(self):
+        copy_location = "test_binary_files/test_file.mp4"
+        with self.audio.open("rb") as file:
+            with open(copy_location, "wb") as copy:
+                copy.write(file.read())
+
+        with open(copy_location, "rb") as copy:
+            copy_file = SimpleUploadedFile(
+                "test_file.mp4", copy.read(), content_type="video/mp4"
+            )
+
+        response = self.client.post(
+            self.upload_url,
+            data=encode_multipart(BOUNDARY, dict(video=copy_file)),
+            content_type=MULTIPART_CONTENT,
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("error", response.data)
+        self.assertEqual(response.data["error"], "video: Video has to be in mp4 format")
+
+        os.remove(copy_location)
