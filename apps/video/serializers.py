@@ -53,3 +53,14 @@ class VideoResolution(serializers.Serializer):
             )
 
         return value
+
+
+class VideoStatusSerializer(serializers.ModelSerializer):
+    filename = serializers.ReadOnlyField(source="name")
+    processing = serializers.ReadOnlyField(source="is_processing")
+    processingSuccess = serializers.ReadOnlyField(source="last_processed_success")
+
+    class Meta:
+        model = Video
+        fields = ["id", "filename", "processing", "processingSuccess"]
+        read_only_fields = ["id"]
