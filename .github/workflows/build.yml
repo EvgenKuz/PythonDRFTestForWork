@@ -36,6 +36,8 @@ jobs:
         run: poetry run black . --check
       - name: isort
         run: poetry run isort . --check --diff
+      - name: Install FFMPEG
+        run: apt update && apt install ffmpeg
       - name: Run tests
         run: poetry run pytest
       - name: Check absent migrations
