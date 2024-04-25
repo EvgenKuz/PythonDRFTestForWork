@@ -35,6 +35,13 @@ def change_resolution_of_video(video_id: uuid.UUID, width: int, height: int):
     video.save()
 
     try:
+        VideoService.make_copy_of_video(video)
+    except IOError as e:
+        logger.error(f"Failed to make copy of video({video.id}).", exc_info=e)
+        set_failed_status_to_video(video)
+        return
+
+    try:
         VideoService.change_video_resolution(video, width, height)
     except ffmpeg.Error as e:
         logger.error(
@@ -43,12 +50,16 @@ def change_resolution_of_video(video_id: uuid.UUID, width: int, height: int):
             exc_info=e,
         )
 
-        video.last_processed_success = False
-        video.is_processing = False
-        video.save()
+        set_failed_status_to_video(video)
         return
 
     logger.info(f"Changed resolution of video({video.id}) to (w: {width}, h: {height})")
     video.last_processed_success = True
     video.is_processing = False
+    video.save()
+
+
+def set_failed_status_to_video(video: Video):
+    video.is_processing = False
+    video.last_processed_success = False
     video.save()
