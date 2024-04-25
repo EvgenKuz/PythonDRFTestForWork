@@ -45,7 +45,7 @@ class VideoUploadTests(TestCase):
         video_in_db = Video.objects.get(id=video_id)
 
         self.assertEqual(video_in_db.name, self.video.name)
-        self.assertIn(video_id, video_in_db.video.path)
+        self.assertIn(video_id, video_in_db.file.path)
 
     def test_sending_no_file(self):
         response = self.client.post(self.upload_url, content_type=MULTIPART_CONTENT)
@@ -62,4 +62,4 @@ class VideoUploadTests(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("error", response.data)
-        self.assertEqual(response.data["error"], "Video has to be in mp4 format")
+        self.assertEqual(response.data["error"], "video: Video has to be in mp4 format")

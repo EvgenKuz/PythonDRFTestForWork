@@ -2,6 +2,8 @@ FROM python:3.11-alpine
 LABEL authors="eugeny.kuz@gmail.com"
 
 RUN pip install poetry
+RUN apk update
+RUN apk add ffmpeg
 
 WORKDIR /drf-ffmpeg
 COPY ./ /drf-ffmpeg/
