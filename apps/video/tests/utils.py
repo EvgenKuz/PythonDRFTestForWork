@@ -12,6 +12,8 @@ def create_video():
 
     test_video_path = "test_binary_files/SampleVideo_1280x720_1mb.mp4"
     file_copy_path = f"videos/{id}.mp4"
+    if not os.path.isdir(settings.MEDIA_ROOT):
+        os.mkdir(settings.MEDIA_ROOT)
     if not os.path.isdir(settings.MEDIA_ROOT / "videos"):
         os.mkdir(settings.MEDIA_ROOT / "videos")
 
