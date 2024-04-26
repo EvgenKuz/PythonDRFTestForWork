@@ -1,12 +1,12 @@
 # PythonDRFTestForWork
-Python DRF test task for job apllication.
+Python DRF test task for job application.
 Requirements from [repo](https://github.com/sdobrimutrom/python_test).
 
 # Installation and start
-1. Install [Python 3.11](https://www.python.org/)
-2. Install [Poetry](https://python-poetry.org/docs/#installation)
-3. Install [Docker](https://docs.docker.com/get-docker/)
-4. Install [FFMPEG](https://ffmpeg.org/)
+1. Install [Docker](https://docs.docker.com/get-docker/)
+2. Install [Python 3.11](https://www.python.org/)
+3. Install [Poetry](https://python-poetry.org/docs/#installation)
+4. Run `poetry install`
 5. Create `.env`:
 ```dotenv
 SECRET_KEY='django-insecure-@v7o6)tdhhe4-r)#vv#hsh$+4ui8$5!59bv)7c_av5rdu0xi$k'
@@ -17,19 +17,21 @@ REDIS_PASSWORD=securePassword
 FLOWER_LOGIN=admin
 FLOWER_PASSWORD=passwordFlower
 ```
+6. Run `poetry run python manage.py migrate`
+
 
 ## Just start the project
-6. Run `docker compose up -d`
-7. Server is now available at `localhost:8080\swagger`
+7. Run `docker compose up -d`
+8. Server is now available at `localhost:8080/swagger`
 
 ## Development
-6. Install [Git LFS](https://git-lfs.com/)
-7. Run `git lfs pull`
-8. Run `docker compose up -d redis celery flower`
-9. Run `poetry install --with development`
-10. Run `pre-commit install`
-11. Run `poetry run python manage.py migrate`
-12. Now you can develop)
+7. Install [FFMPEG](https://ffmpeg.org/)
+8. Install [Git LFS](https://git-lfs.com/)
+9. Run `git lfs pull`
+10. Run `poetry install --with development`
+11. Run `poetry run pre-commit install`
+12. Run `docker compose up -d redis celery flower`
+13. Now you can develop)
 
 # python_test
 MMVS Python Test
